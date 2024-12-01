@@ -1,5 +1,9 @@
 # Rideau Canal Skateway Real-Time Monitoring System
 
+## Group Members
+1. **Jatin Hooda**
+2. **Devgiri Gosai**
+
 ## Scenario Description
 The **Rideau Canal Skateway**, a historic and world-renowned attraction in Ottawa, needs constant monitoring to ensure skater safety. The team was hired by the National Capital Commission (NCC) to build a real-time data streaming system to monitor ice conditions and weather factors along the canal. The system will simulate IoT sensors, process incoming sensor data, and store the results for further analysis.
 
@@ -84,6 +88,4 @@ Key findings include:
 ## Reflection
 During implementation, we faced challenges in setting up the Azure IoT Hub and configuring the Stream Analytics queries. However, with clear documentation from Azure and iterative testing, we were able to resolve these issues.
 
-## Group Members
-1. **Jatin Hooda**
-2. **Devgiri Gosai**
+
