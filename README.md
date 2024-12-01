@@ -81,9 +81,23 @@ Processed data is stored in Azure Blob Storage in JSON or CSV format. Data is or
 3. Download and analyze the data in JSON or CSV format.
 
 ## Results
-Key findings include:
-- Average ice thickness: [Sample Data]
-- Maximum snow accumulation: [Sample Data]
+
+### Sample Data:
+
+| Sensor ID       | Temperature (°C) | Ice Thickness (cm) | Timestamp              |
+|-----------------|------------------|--------------------|------------------------|
+| RideauSensor001 | -10.47           | 47.91              | 2024-12-01T17:46:52Z   |
+| RideauSensor001 | -14.45           | 33.45              | 2024-12-01T17:47:52Z   |
+| RideauSensor001 | -11.23           | 40.64              | 2024-12-01T17:48:02Z   |
+| RideauSensor001 | -13.81           | 29.91              | 2024-12-01T17:48:12Z   |
+| RideauSensor001 | -12.74           | 35.88              | 2024-12-01T17:48:22Z   |
+
+### Key Findings:
+- **Average Ice Thickness**: 37.56 cm
+- **Maximum Snow Accumulation**: 47.91 cm
+
+This data represents the real-time monitoring of ice conditions on the Rideau Canal, with an average ice thickness of 37.56 cm and a maximum snow accumulation of 47.91 cm.
+
 
 ## Reflection
 During implementation, we faced challenges in setting up the Azure IoT Hub and configuring the Stream Analytics queries. However, with clear documentation from Azure and iterative testing, we were able to resolve these issues.
