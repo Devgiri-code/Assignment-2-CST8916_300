@@ -1,42 +1,53 @@
-from azure.iot.device import IoTHubDeviceClient, Message
-import time
 import random
+import time
+from azure.iot.device import IoTHubDeviceClient
 
-# Replace this with your actual device connection string
-CONNECTION_STRING = "HostName=hood0034.azure-devices.net;DeviceId=RideauSensor001;SharedAccessKey=QK22BiwJmO9wEnQcJ9w6wERWtgAa1WU8YjLx6MvBmzY="
+# IoT Hub connection strings for three locations
+SENSOR_CONNECTIONS = {
+    "DowsLake": "HostName=RideauIoTHub.azure-devices.net;DeviceId=DowsLakeSensor;SharedAccessKey=OEHtJXwSsE77QoLSVWWuP2D02qeo3JNPS1BPA8nt8wM=",
+    "FifthAvenue": "HostName=RideauIoTHub.azure-devices.net;DeviceId=FifthAvenueSensor;SharedAccessKey=7vds3KHM9XoPcCJzA4aCKNKMWZQYl3EhJVacILkIawk=",
+    "NAC": "HostName=RideauIoTHub.azure-devices.net;DeviceId=NACSensor;SharedAccessKey=783xJBtQpb/phWaR8Q/SVsUCfiMw7J+CW/lSHQ8Yzno="
+}
 
-# Create a function to simulate sensor data
-def simulate_data():
+# Simulate telemetry data
+def generate_telemetry(location):
     return {
-        "sensorId": "RideauSensor001",
-        "temperature": round(random.uniform(-15.0, -5.0), 2),  # Random temperature in Celsius
-        "iceThickness": round(random.uniform(20.0, 50.0), 2),  # Random ice thickness in cm
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())  # Current UTC time
+        "location": location,
+        "temperature": round(random.uniform(-20, 0), 2),  # Temperature in Celsius
+        "iceThickness": round(random.uniform(20, 50), 2),  # Ice thickness in cm
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())  # ISO 8601 format
     }
 
-def main():
+# Send telemetry data to IoT Hub
+def send_telemetry(device_client, telemetry_data):
     try:
-        # Create an IoT Hub device client
-        client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
-        print("Simulating data... Press Ctrl+C to stop.")
-        
+        message = str(telemetry_data)
+        device_client.send_message(message)
+        print(f"Sent: {message}")
+    except Exception as e:
+        print(f"Failed to send message: {e}")
+
+def main():
+    # Create IoT Hub clients for each location
+    clients = {
+        location: IoTHubDeviceClient.create_from_connection_string(connection_string)
+        for location, connection_string in SENSOR_CONNECTIONS.items()
+    }
+
+    print("Simulating IoT sensors at three key locations (Dow's Lake, Fifth Avenue, NAC)...")
+    try:
         while True:
-            # Generate simulated data
-            data = simulate_data()
-            # Convert data to JSON string
-            message = Message(str(data))
-            
-            # Send message to IoT Hub
-            client.send_message(message)
-            print(f"Sent: {data}")
-            
-            # Wait for 5 seconds before sending the next message
-            time.sleep(5)
+            for location, client in clients.items():
+                telemetry_data = generate_telemetry(location)
+                send_telemetry(client, telemetry_data)
+            time.sleep(5)  # Delay between messages (5 seconds)
     except KeyboardInterrupt:
-        print("Simulation stopped by user.")
+        print("\nSimulation stopped.")
     finally:
-        # Shut down the client gracefully
-        client.shutdown()
+        # Shutdown all clients
+        for client in clients.values():
+            client.shutdown()
 
 if __name__ == "__main__":
     main()
+
